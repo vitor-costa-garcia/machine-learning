@@ -1,12 +1,22 @@
-# machine-learning
-Implementation of machine learning algorithms
+# machine-learning - Implementation of machine learning algorithms
 
-Supervised Learning
+### Good sources for humans learning machine learning
+* **Books**
+    * **Pattern Recognition and Machine Learning**
+    * **Elements of Statistical Learning**
+    * Introduction to Statistical Learning (+Programming)
+
+* **Recorded Lectures**
+    * MIT OpenCourseWare (EN)
+    * Stanford Online (EN)
+    * **IMPA: Paulo Orenstein ML Summer Course 2026 (PT-BR)**
+
+### Supervised Learning
  - 
 
-Unsupervised Learning
+### Unsupervised Learning
  - PCA
  - K-Means
 
-Reinforcement Learning
+### Reinforcement Learning
  - 
