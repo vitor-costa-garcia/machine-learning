@@ -43,8 +43,8 @@ if __name__ == "__main__":
 	])
 
 	fig = plt.figure()
-	ax = fig.add_subplot(projection='3d', c=groups)
-	ax.scatter(X[:,0], X[:,1], X[:,2])
+	ax = fig.add_subplot(projection='3d')
+	ax.scatter(X[:,0], X[:,1], X[:,2], c=groups)
 	plt.show()
 
 	pca_data = pca.fit_transform(X)
