@@ -15,7 +15,7 @@
  - 
 
 ### Unsupervised Learning
- - PCA
+ - PCA, KPCA(RBF)
  - K-Means
 
 ### Reinforcement Learning
