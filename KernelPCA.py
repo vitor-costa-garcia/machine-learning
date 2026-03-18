@@ -43,7 +43,7 @@ class KernelPrincipalComponentAnalysis():
         alphas = kpca_matrix / s_subset
 
         #Projetando os dados
-        result = c_gram_matrix @ alphas[:, :self.n_components]
+        result = np.dot(c_gram_matrix, alphas[:, :self.n_components])
 
         return result
 
