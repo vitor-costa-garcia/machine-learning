@@ -10,10 +10,6 @@ class GaussianMixtureModel():
 	def _multivariate_gaussian_pdf(self, X: np.ndarray, mu: np.ndarray, sigma: np.ndarray):
 		d = len(mu)
 
-		print("---")
-		print(sigma)
-		print("---")
-
 		det_sig = np.linalg.det(sigma)
 		sig_inv = np.linalg.inv(sigma)
 
@@ -31,7 +27,7 @@ class GaussianMixtureModel():
 		resp = np.ones((N, K))
 
 		for k in range(K):
-			resp[:, k] = self._multivariate_gaussian_pdf(X, mu[:,k], cov_mat[:,:,k]) * mixing_coef[k]
+			resp[:, k] = self._multivariate_gaussian_pdf(X, mu[k], cov_mat[k]) * mixing_coef[k]
 
 		sum_resp_k = np.sum(resp, axis=1)
 
@@ -49,8 +45,7 @@ class GaussianMixtureModel():
 		new_cov_mat = list()
 
 		for k in range(K):
-			print(X[0, :], new_means[k, :])
-			diff = X - new_means[k, :]
+			diff = X - new_means[k]
 
 			new_cov = np.dot((resp[:, k] * diff.T), diff) / N_k[k]
 			new_cov_mat.append(new_cov)
@@ -66,7 +61,7 @@ class GaussianMixtureModel():
 		w_pdfs = np.ones((N, K))
 
 		for k in range(K):
-			w_pdfs[:, k] = self._multivariate_gaussian_pdf(X, mu[:,k], sigma[:,:,k]) * mixing_coef[k]
+			w_pdfs[:, k] = self._multivariate_gaussian_pdf(X, mu[k], sigma[k]) * mixing_coef[k]
 
 		sum_w_pdfs_k = np.sum(w_pdfs, axis=1)
 		log_sum_w_pdfs = np.sum(np.log(sum_w_pdfs_k))
@@ -111,6 +106,7 @@ class GaussianMixtureModel():
 			current_log_l = self._log_likekihood(X, mixing_coef, mean_k, cov_mat_k)
 			if abs(current_log_l - last_log_l) <= self.tol:
 				break
+			last_log_l = current_log_l
 
 		labels = np.argmax(resp, axis=1)
 
@@ -118,14 +114,25 @@ class GaussianMixtureModel():
 
 if __name__ == "__main__":
 	X = np.concatenate([
-	    np.random.normal(loc=0, scale=1, size=(100, 2)),
-	    np.random.normal(loc=5, scale=1, size=(100, 2)),
+	    np.random.normal(loc=0, scale=1, size=(100, 3)),
+	    np.random.normal(loc=5, scale=1, size=(100, 3)),
+	    np.random.normal(loc=-5, scale=1, size=(100, 3)),
 	])
 
-	gmm = GaussianMixtureModel(n_components=2, tol=10e-4)
+	fig = plt.figure()
+	ax = fig.add_subplot(projection='3d')
+	ax.set_title("Original data")
+	ax.scatter(X[:, 0], X[:, 1], X[:, 2])	
+	plt.show()
+
+	#Gaussian mixture model
+	gmm = GaussianMixtureModel(n_components=3, tol=10e-3)
 	classes = gmm.fit_transform(X)
 
-	plt.scatter(X[:, 0], X[:, 1], c=classes)
+	fig = plt.figure()
+	ax = fig.add_subplot(projection='3d')
+	ax.set_title("Clustering with Gaussian Mixture Model k=3")
+	ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=classes)	
 	plt.show()
 
 

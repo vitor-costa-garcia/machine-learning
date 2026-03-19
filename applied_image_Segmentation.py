@@ -1,4 +1,5 @@
 from Kmeans import Kmeans
+from GaussianMixtureModel import GaussianMixtureModel
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,7 +19,7 @@ RGB_matrix[:, 1] = img_arr[:,:,1].flatten()
 RGB_matrix[:, 2] = img_arr[:,:,2].flatten()
 
 #Kmeans algorithm instance
-kmeans = Kmeans(1, 1000, 10e-4)
+# kmeans = Kmeans(1, 1000, 10e-4)
 
 #Plotting some examples -----------------------------------
 
@@ -115,3 +116,26 @@ kmeans = Kmeans(1, 1000, 10e-4)
 
 # --------------------------------------------------------
 
+# GMM in image segmentation
+fig, ax = plt.subplots(1, 4, figsize=(12,5))
+
+fig.suptitle(f"GMM image segmentation example")
+
+ax[0].set_title("Original image")
+ax[0].imshow(img_arr)
+
+cmap = 'Accent'
+
+for k in range(2, 5): # Ks from 2 to 6
+	gmm = GaussianMixtureModel(n_components=k, tol=10e-3)
+
+	gmm.n_components = k
+	labels = gmm.fit_transform(RGB_matrix).reshape(rows, cols)
+
+	ax[k-1].set_title(f"K = {k}")
+	ax[k-1].imshow(labels)
+
+plt.savefig("images/dog_img_segmentation_gmm.png")
+plt.show()
+
+# ----------------------------------------------
