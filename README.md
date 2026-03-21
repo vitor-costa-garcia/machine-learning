@@ -12,11 +12,12 @@
     * **IMPA: Paulo Orenstein ML Summer Course 2026 (PT-BR)**
 
 ### Supervised Learning
- - 
+ - Linear regression (Mini-batch GD)
 
 ### Unsupervised Learning
  - PCA, KPCA(RBF)
  - K-Means
+ - Gaussian Mixture
 
 ### Reinforcement Learning
  - 
