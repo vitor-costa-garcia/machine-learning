@@ -141,6 +141,5 @@ if __name__ == "__main__":
 	    np.random.normal(loc=12, scale=200, size=(N_POINTS//4, 4)),
 	])
 	y = np.random.choice(3, N_POINTS)
-	pass
 	dct = DecisionTreeClassifier(100, 100, 100, 30)
 	dct.fit(X, y)
