@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from BaseModel import BaseModel
 
-class Kmeans():
+class Kmeans(BaseModel):
 	def __init__(self, n_clusters: int, max_iter: int, tol: float):
 		self.n_clusters = n_clusters
 		self.max_iter = max_iter

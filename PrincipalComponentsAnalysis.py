@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from BaseModel import BaseModel
 
-class PrincipalComponentAnalysis():
+class PrincipalComponentAnalysis(BaseModel):
 	def __init__(self, n_components: int):
 		# Number of principal components
 		self.n_components = n_components
 
-	def fit_transform(self, X: np.ndarray):
+	def fit_predict(self, X: np.ndarray):
 		# Centralizing the data
 		X_center = X - np.mean(X, axis = 0)
 
@@ -47,7 +48,7 @@ if __name__ == "__main__":
 	ax.scatter(X[:,0], X[:,1], X[:,2], c=groups)
 	plt.show()
 
-	pca_data = pca.fit_transform(X)
+	pca_data = pca.fit_predict(X)
 
 	fig, ax = plt.subplots()
 	ax.scatter(pca_data[:, 0], pca_data[:, 1], c=groups)

@@ -1,4 +1,5 @@
 import numpy as np
+from BaseModel import BaseModel
 
 class DecisionTreeRegressorNode:
 	def __init__(self, hist:np.array, active_samples: np.array):
@@ -11,7 +12,7 @@ class DecisionTreeRegressorNode:
 		self.left = None
 		self.right = None
 
-class DecisionTreeRegressor:
+class DecisionTreeRegressor(BaseModel):
 	def __init__(self, bins: int, max_n_leaves: int, min_samples_node: int, max_depth: int):
 		self.bins = bins
 		self.max_n_leaves = max_n_leaves

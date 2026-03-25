@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from BaseModel import BaseModel
 
-class LinearRegression():
+class LinearRegression(BaseModel):
 	"""Implementation using mini-match GD"""
 	def __init__(self, max_iter: int, batch_size: int, tol: float, learning_rate: float):
 		self.max_iter = max_iter
@@ -24,7 +25,6 @@ class LinearRegression():
 	    X_batch_bias = np.c_[X_batch, np.ones(self.batch_size)]
 
 	    grad = (X_batch_bias.T @ residuals) / self.batch_size
-	    print(grad)
 
 	    self.coef -= self.lr * grad
 

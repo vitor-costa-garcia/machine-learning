@@ -2,8 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import floor, ceil
 from PrincipalComponentsAnalysis import PrincipalComponentAnalysis
+from BaseModel import BaseModel
 
-class KernelPrincipalComponentAnalysis():
+class KernelPrincipalComponentAnalysis(BaseModel):
     def __init__(self, n_components: int, kernel_function: str = 'rbf', gamma: float = 15):
         self.n_components = n_components
         self.kernel_function = kernel_function
@@ -14,7 +15,7 @@ class KernelPrincipalComponentAnalysis():
         xn = X[np.newaxis, :, :]
         return np.exp(-self.gamma * (np.linalg.norm(xn-xm, axis=-1)**2))
 
-    def fit_transform(self, X: np.ndarray):
+    def fit_predict(self, X: np.ndarray):
         #Gerando a Gram Matrix, onde cada elemento a_ij=k(x_n, x_m)
         gram_matrix = self._kernel_rbf(X)
 
@@ -72,10 +73,10 @@ if __name__=="__main__":
     ])
 
     kpca = KernelPrincipalComponentAnalysis(1, gamma=4)
-    X_kpca = kpca.fit_transform(X)
+    X_kpca = kpca.fit_predict(X)
 
     pca = PrincipalComponentAnalysis(1)
-    X_pca = pca.fit_transform(X)
+    X_pca = pca.fit_predict(X)
 
     # Plot comparação KPCA x PCA no dataset de duas luas
     fig, ax = plt.subplots(1,3, figsize=(12, 6))

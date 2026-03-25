@@ -1,8 +1,9 @@
 import numpy as np
 from Kmeans import Kmeans
 import matplotlib.pyplot as plt
+from BaseModel import BaseModel
 
-class GaussianMixtureModel():
+class GaussianMixtureModel(BaseModel):
 	def __init__(self, n_components: int, tol: float):
 		self.n_components = n_components
 		self.tol = tol
@@ -68,7 +69,7 @@ class GaussianMixtureModel():
 
 		return log_sum_w_pdfs
 
-	def fit_transform(self, X: np.ndarray):
+	def fit_predict(self, X: np.ndarray):
 		#Using kmeans to initialize gaussians parameters u_k, sigma_k and pi_k
 		kmeans = Kmeans(self.n_components, 100, 10e-5)
 		initial_groups = kmeans.fit_predict(X)
@@ -127,7 +128,7 @@ if __name__ == "__main__":
 
 	#Gaussian mixture model
 	gmm = GaussianMixtureModel(n_components=3, tol=10e-3)
-	classes = gmm.fit_transform(X)
+	classes = gmm.fit_predict(X)
 
 	fig = plt.figure()
 	ax = fig.add_subplot(projection='3d')
