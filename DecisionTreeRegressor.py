@@ -205,15 +205,14 @@ if __name__ == "__main__":
 	X_train, X_test, y_train, y_test = X[:2400], X[2400:], y[:2400], y[2400:]
 
 	params = {
-		'bins': 255,
-		'max_n_leaves': 100,
+		'bins': 300,
+		'max_n_leaves': 130,
 		'min_samples_node': 30,
-		'max_depth': 10
+		'max_depth': 12
 	}
 
 	dcr = DecisionTreeRegressor(**params)
 	dcr.fit(X_train, y_train)
-	dcr._in_order(dcr.root)
 
 	predictions = dcr.predict(X_train)
 	train_rsme = np.sqrt(np.mean((y_train - predictions)**2))
