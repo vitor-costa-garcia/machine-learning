@@ -9,3 +9,6 @@ class BaseModel():
 
 	def fit_predict(X: np.array):
 		pass
+
+	def fit_transform(X: np.array):
+		pass
