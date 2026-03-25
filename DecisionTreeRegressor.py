@@ -100,8 +100,9 @@ class DecisionTreeRegressor(BaseModel):
 		right_active_samples[self.sorted_features[:, split_feature][bin_index:]] = True
 
 		# Set to false all the observations that wasnt active in the parent node
-		left_active_samples &= parent_actives
-		right_active_samples &= parent_actives
+		current_X_feat = self.X[:, split_feature]
+		left_active_samples = (current_X_feat <= split_threshold) & parent_actives
+		right_active_samples = (~(current_X_feat <= split_threshold)) & parent_actives
 
 		# Build histogram for left and right nodes
 		left_hist = self._build_hist(left_active_samples)
@@ -118,7 +119,7 @@ class DecisionTreeRegressor(BaseModel):
 		left_node_info, right_node_info, split_info = self._split_node(node)
 		# print(left_node_info, right_node_info)
 
-		if left_node_info and right_node_info:
+		if left_node_info is not None and right_node_info is not None:
 			node.split_feature = split_info[0]
 			node.split_threshold = split_info[1]
 
@@ -127,10 +128,9 @@ class DecisionTreeRegressor(BaseModel):
 			left_node = DecisionTreeRegressorNode(left_node_info[0], left_node_info[1])
 			right_node = DecisionTreeRegressorNode(right_node_info[0], right_node_info[1])
 
-			node.left = self._sup_fit(left_node)
-			node.right = self._sup_fit(right_node)
+			node.left = self._sup_fit(left_node, depth + 1)
+			node.right = self._sup_fit(right_node, depth + 1)
 
-		self.n_leaves += 1
 		return node
 
 	def fit(self, X: np.array, y: np.array):
@@ -140,7 +140,7 @@ class DecisionTreeRegressor(BaseModel):
 		self.observations, self.features = X.shape
 
 		hist_step = self.observations//self.bins
-		self.hist_intervals = np.arange(start = 0, stop = self.observations + hist_step, step = hist_step)
+		self.hist_intervals = np.linspace(0, self.observations, self.bins + 1).astype(int)
 
 		root_active_samples = np.ones_like(self.y, dtype=bool)
 		root_hist = self._build_hist(root_active_samples)
@@ -152,7 +152,7 @@ class DecisionTreeRegressor(BaseModel):
 	def _sup_predict(self, x_i: np.array, node: DecisionTreeRegressorNode):
 		# Using mean of the leaf as the output 
 		if node.left == None and node.right == None:
-			return np.mean(node.hist[0][:, 0])
+			return node.hist[0, :, 0].sum() / node.hist[0, :, 2].sum()
 
 		#Transversing the tree recursively one observation at a time
 		if x_i[node.split_feature] >= node.split_threshold:
@@ -205,10 +205,10 @@ if __name__ == "__main__":
 	X_train, X_test, y_train, y_test = X[:2400], X[2400:], y[:2400], y[2400:]
 
 	params = {
-		'bins': 300,
-		'max_n_leaves': 1000,
-		'min_samples_node': 4,
-		'max_depth': 100
+		'bins': 255,
+		'max_n_leaves': 100,
+		'min_samples_node': 30,
+		'max_depth': 10
 	}
 
 	dcr = DecisionTreeRegressor(**params)
@@ -217,9 +217,16 @@ if __name__ == "__main__":
 
 	predictions = dcr.predict(X_train)
 	train_rsme = np.sqrt(np.mean((y_train - predictions)**2))
-	print(train_rsme)
+
+	ss_res = np.sum((y_train - predictions)**2)
+	ss_tot = np.sum((y_train - np.mean(y_train))**2)
+	print("R^2 train:", 1-(ss_res/ss_tot))
+	print("RSME train:", train_rsme)
 
 	predictions = dcr.predict(X_test)
 	test_rsme = np.sqrt(np.mean((y_test - predictions)**2))
-	print(test_rsme)
 
+	ss_res = np.sum((y_test - predictions)**2)
+	ss_tot = np.sum((y_test - np.mean(y_test))**2)
+	print("R^2 test:", 1-(ss_res/ss_tot))
+	print("RSME test:", test_rsme)
