@@ -1,7 +1,7 @@
 import numpy as np
 
 class DecisionTreeClassifierNode:
-	def __init__(self, hist:np.array, active_samples: np.array):
+	def __init__(self, hist: np.array, active_samples: np.array):
 		# Histogram (count classes per bin) and active samples for given node
 		self.hist = hist
 		self.active_samples = active_samples
@@ -15,7 +15,7 @@ class DecisionTreeClassifierNode:
 		self.right = None
 
 class DecisionTreeClassifier:
-	def __init__(self, bins, max_n_leaves, min_samples_node, max_depth):
+	def __init__(self, bins: int, max_n_leaves: int, min_samples_node: int, max_depth: int):
 		self.bins = bins
 		self.max_n_leaves = max_n_leaves
 		self.min_samples_node = min_samples_node
