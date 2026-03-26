@@ -1,8 +1,7 @@
 import numpy as np
-from BaseModel import BaseModel
 
 class DecisionTreeClassifierNode:
-	def __init__(self, hist: np.array, active_samples: np.array):
+	def __init__(self, hist:np.array, active_samples: np.array):
 		# Histogram (count classes per bin) and active samples for given node
 		self.hist = hist
 		self.active_samples = active_samples
@@ -15,14 +14,15 @@ class DecisionTreeClassifierNode:
 		self.left = None
 		self.right = None
 
-class DecisionTreeClassifier(BaseModel):
-	def __init__(self, bins: int, max_n_leaves: int, min_samples_node: int, max_depth: int):
+class DecisionTreeClassifier:
+	def __init__(self, bins, max_n_leaves, min_samples_node, max_depth):
 		self.bins = bins
 		self.max_n_leaves = max_n_leaves
 		self.min_samples_node = min_samples_node
 		self.max_depth = max_depth
 
 		self.n_leaves = 1
+		self.depth = 0
 
 	def _build_hist(self, active_samples:np.array):
 		hist = list()
@@ -133,6 +133,7 @@ class DecisionTreeClassifier(BaseModel):
 
 	def _sup_fit(self, node: DecisionTreeClassifierNode, depth: int = 0):
 		# Constraints defined by the hyperparameters. Limit tree growth. Avoids overfitting
+		self.depth = max(depth, self.max_depth)
 		if depth >= self.max_depth or self.n_leaves >= self.max_n_leaves:
 			self.n_leaves += 1
 			return node
@@ -249,9 +250,9 @@ if __name__ == '__main__':
 	# -----------------------------------------------------------------------------------------------------
 
 	#Testando árvore de classificação
-	total_size = 2000
+	total_size = 20000
 	X, y = make_tree_friendly_data(total_size)
-	train_size = 1600
+	train_size = 16000
 	test_size = total_size - train_size
 
 	#Dividindo dados sintéticos em treino/teste
@@ -259,13 +260,37 @@ if __name__ == '__main__':
 
 	#Hiperparâmetros da árvore de decisão
 	params = {
-		'bins': 100,
-		'max_n_leaves': 100,
+		'bins': 600,
+		'max_n_leaves': 512,
 		'min_samples_node': 20,
-		'max_depth': 7
+		'max_depth': 9
 	}
 
+	print("IMPLEMENTATION ----------")
 	dtc = DecisionTreeClassifier(**params)
+	dtc.fit(X_train, y_train)
+
+	# Comparação acurácia de treinamento e teste
+	predictions_train = dtc.predict(X_train)
+	accuracy_train = np.sum(predictions_train == y_train)/train_size
+	print("Accuracy train:", accuracy_train)
+
+	predictions_test = dtc.predict(X_test)
+	accuracy_test = np.sum(predictions_test == y_test)/test_size
+	print("Accuracy test:", accuracy_test)
+
+	print(dtc.n_leaves, dtc.depth)
+
+
+	print("SKLEARN ----------")
+	from sklearn.tree import DecisionTreeClassifier as SklearnTree
+
+	params = {
+		'max_leaf_nodes': 512,
+		'min_samples_leaf': 20,
+		'max_depth': 9
+	}
+	dtc = SklearnTree(**params)
 	dtc.fit(X_train, y_train)
 
 	# Comparação acurácia de treinamento e teste

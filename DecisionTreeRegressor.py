@@ -206,9 +206,9 @@ if __name__ == "__main__":
 
 	params = {
 		'bins': 300,
-		'max_n_leaves': 130,
-		'min_samples_node': 30,
-		'max_depth': 12
+		'max_n_leaves': 255,
+		'min_samples_node': 20,
+		'max_depth': 10
 	}
 
 	dcr = DecisionTreeRegressor(**params)
