@@ -4,7 +4,8 @@
 * **Books**
     * **Pattern Recognition and Machine Learning**
     * **Elements of Statistical Learning**
-    * Introduction to Statistical Learning (+Programming)
+    * **Probabilistic Machine Learning**
+    * Introduction to Statistical Learning
 
 * **Recorded Lectures**
     * MIT OpenCourseWare (EN)
@@ -13,11 +14,20 @@
 
 ### Supervised Learning
  - Linear regression (Mini-batch GD)
+ - Decision Trees (Classifier & Regressor)
+ - Random Forest (Clasffier & Regressor)
 
 ### Unsupervised Learning
- - PCA, KPCA(RBF)
+ - PCA
+ - KPCA(RBF)
  - K-Means
  - Gaussian Mixture
 
 ### Reinforcement Learning
  - 
+#### Utils
+- Bagging (For classification and regression)
+- Bootstrapping
+
+#### Applications
+- Image segmentation w\ k-means
