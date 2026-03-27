@@ -71,6 +71,7 @@ class GaussianMixtureModel(BaseModel):
 
 	def fit_predict(self, X: np.ndarray):
 		#Using kmeans to initialize gaussians parameters u_k, sigma_k and pi_k
+		self.observations, self.features = X.shape
 		kmeans = Kmeans(self.n_components, 100, 10e-5)
 		initial_groups = kmeans.fit_predict(X)
 
@@ -104,14 +105,32 @@ class GaussianMixtureModel(BaseModel):
 			resp = self._e_step(X, mixing_coef, mean_k, cov_mat_k)
 			mixing_coef, mean_k, cov_mat_k = self._m_step(X, resp)
 
-			current_log_l = self._log_likekihood(X, mixing_coef, mean_k, cov_mat_k)
-			if abs(current_log_l - last_log_l) <= self.tol:
+			self.current_log_l = self._log_likekihood(X, mixing_coef, mean_k, cov_mat_k)
+			if abs(self.current_log_l - last_log_l) <= self.tol:
 				break
-			last_log_l = current_log_l
+			last_log_l = self.current_log_l
 
 		labels = np.argmax(resp, axis=1)
 
 		return labels
+
+	def _get_parameters(self):
+		k = self.n_components
+		d = self.features
+		p = k * ((d*(d+2)/2) + 1) - 1
+
+		return p
+
+	def aic(self):
+		p = self._get_parameters()
+
+		return 2*p - 2*self.current_log_l
+
+	def bic(self):
+		p = self._get_parameters()
+
+		return 2*np.log(self.observations) - 2*self.current_log_l
+
 
 if __name__ == "__main__":
 	X = np.concatenate([
@@ -119,6 +138,8 @@ if __name__ == "__main__":
 	    np.random.normal(loc=5, scale=1, size=(100, 3)),
 	    np.random.normal(loc=-5, scale=1, size=(100, 3)),
 	])
+
+	# Example -----------------------
 
 	fig = plt.figure()
 	ax = fig.add_subplot(projection='3d')
@@ -136,4 +157,25 @@ if __name__ == "__main__":
 	ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=classes)	
 	plt.show()
 
+	# ------------------------------
 
+	# AIC and BIC measures for K choice ------------------
+
+	aic_list = list()
+	bic_list = list()
+
+	for k_i in range(2, 7):
+		gmm = GaussianMixtureModel(n_components=k_i, tol=10e-3)
+		classes = gmm.fit_predict(X)
+
+		aic_list.append(gmm.aic())
+		bic_list.append(gmm.bic())
+
+	fig = plt.figure()
+	ax = fig.add_subplot()
+	ax.plot([i for i in range(2,7)], aic_list, marker='s')
+	ax.plot([i for i in range(2,7)], bic_list, marker='s', c='orange')
+	fig.legend(['AIC', 'BIC'])
+	plt.show()
+
+	# -----------------------------------------------------
