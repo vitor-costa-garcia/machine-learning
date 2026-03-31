@@ -75,9 +75,18 @@ class KDTree(BaseModel):
 
 		self._inorder(node.right)
 
-	def _find_k_sup(self, node: KDTreeNode):
+	def _find_k_sup(self, X: np.array, node: KDTreeNode):
 		if node.left == None and node.right == None:
 			#reached the leaf
+
+		split_feat = node.split_feature
+		split_val = node.split_value
+
+		if X[node.split_feature] > split_val:
+			pass
+
+		else:
+			pass 
 
 	def find_k_neighbors(self, k: int, X: np.ndarray):
 		self.k_closest = []

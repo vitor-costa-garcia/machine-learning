@@ -134,9 +134,9 @@ class GaussianMixtureModel(BaseModel):
 
 if __name__ == "__main__":
 	X = np.concatenate([
-	    np.random.normal(loc=0, scale=1, size=(100, 3)),
-	    np.random.normal(loc=5, scale=1, size=(100, 3)),
-	    np.random.normal(loc=-5, scale=1, size=(100, 3)),
+	    np.random.normal(loc=0, scale=1, size=(1000, 3)),
+	    np.random.normal(loc=5, scale=1, size=(1000, 3)),
+	    np.random.normal(loc=-5, scale=1, size=(1000, 3)),
 	])
 
 	# Example -----------------------
@@ -148,7 +148,7 @@ if __name__ == "__main__":
 	plt.show()
 
 	#Gaussian mixture model
-	gmm = GaussianMixtureModel(n_components=3, tol=10e-3)
+	gmm = GaussianMixtureModel(n_components=19, tol=10e-3)
 	classes = gmm.fit_predict(X)
 
 	fig = plt.figure()
@@ -161,21 +161,21 @@ if __name__ == "__main__":
 
 	# AIC and BIC measures for K choice ------------------
 
-	aic_list = list()
-	bic_list = list()
+	# aic_list = list()
+	# bic_list = list()
 
-	for k_i in range(2, 7):
-		gmm = GaussianMixtureModel(n_components=k_i, tol=10e-3)
-		classes = gmm.fit_predict(X)
+	# for k_i in range(2, 7):
+	# 	gmm = GaussianMixtureModel(n_components=k_i, tol=10e-3)
+	# 	classes = gmm.fit_predict(X)
 
-		aic_list.append(gmm.aic())
-		bic_list.append(gmm.bic())
+	# 	aic_list.append(gmm.aic())
+	# 	bic_list.append(gmm.bic())
 
-	fig = plt.figure()
-	ax = fig.add_subplot()
-	ax.plot([i for i in range(2,7)], aic_list, marker='s')
-	ax.plot([i for i in range(2,7)], bic_list, marker='s', c='orange')
-	fig.legend(['AIC', 'BIC'])
-	plt.show()
+	# fig = plt.figure()
+	# ax = fig.add_subplot()
+	# ax.plot([i for i in range(2,7)], aic_list, marker='s')
+	# ax.plot([i for i in range(2,7)], bic_list, marker='s', c='orange')
+	# fig.legend(['AIC', 'BIC'])
+	# plt.show()
 
 	# -----------------------------------------------------
