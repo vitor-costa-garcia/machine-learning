@@ -84,10 +84,10 @@ class KDTree(BaseModel):
 		split_val = node.split_value
 
 		if X[node.split_feature] > split_val:
-			pass
+			self._find_k_sup(node.right)
 
 		else:
-			pass 
+			self._find_k_sup(node.left)
 
 	def find_k_neighbors(self, k: int, X: np.ndarray):
 		self.k_closest = []
