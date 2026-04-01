@@ -78,6 +78,7 @@ class KDTree(BaseModel):
 	def _find_k_sup(self, X: np.array, node: KDTreeNode):
 		if node.left == None and node.right == None:
 			#reached the leaf
+			pass
 
 		split_feat = node.split_feature
 		split_val = node.split_value
