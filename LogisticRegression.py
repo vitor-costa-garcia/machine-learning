@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
 	plt.scatter(X, y)
 
-	lgr = LogisticRegression(lr=0.01, max_iter=50000)
+	lgr = LogisticRegression(lr=0.01, max_iter=50000, tol=10e-7)
 	lgr.fit(X.reshape(-1, 1), y.reshape(-1 ,1))
 
 	sigmoid_x = np.linspace(-5, 20, 100)
